@@ -6,11 +6,11 @@ class ActionType(Enum):
     VOTE = "vote"
 
 class Block:
-    def __init__(self, type, prev_hash, nonce):
+    def __init__(self, type):
         self.type = type
-        self.prev_hash = prev_hash
+        self.prev_hash = "0" * 64
         self.data = {}
-        self.nonce = nonce
+        self.nonce = 0
         self.timestamp = int(time.time())
 
     def create_election(self, election_id, candidates, user_keys, signature, start_time, end_time):
@@ -26,3 +26,6 @@ class Block:
         self.data["candidate_id"] = candidate_id
         self.data["signature"] = signature
         self.data["public_key"] = public_key
+
+    
+
