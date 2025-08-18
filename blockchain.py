@@ -49,6 +49,7 @@ class Blockchain:
         return sha256_hash.hexdigest()
     
     def add_block(self, block):
+        
         block.prev_hash = self.hash_block(self.blocks[-1])
         mined_hash = self.mine_block(block, 5)
         self.blocks.append(block)
