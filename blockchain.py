@@ -1,5 +1,7 @@
 from block import Block, ActionType
-from datetime import date
+from datetime import date, datetime, time
+from validator import validate_election, validate_votes
+import copy
 import hashlib
 import json
 
@@ -9,6 +11,11 @@ class Blockchain:
         self.genesis_block()
 
     def genesis_block(self):
+        START_DATE = date(2025, 8, 19)
+        END_DATE = date(2025, 8, 21)
+
+        START_TIME = time(20, 10, 0)
+        END_TIME = time(11, 0, 0)
         block = Block(ActionType.CREATE.value)
         block.create_election(
             1, {
@@ -17,15 +24,16 @@ class Blockchain:
                 3: "John"
             },
             [
-                "userkey_1", "userkey_2"
+                "AAAAAA", "WW"
             ],
-            "my_signature", date(2025, 8, 20), date(2025, 8, 25)
+
+            "my_key", "my_signature", datetime.combine(START_DATE, START_TIME), datetime.combine(END_DATE, END_TIME)
         )
 
         self.blocks.append(block)
 
     def hash_block(self, block):
-        copy_block = block
+        copy_block = copy.deepcopy(block)
 
         content = {
             "type": copy_block.type,
@@ -49,9 +57,16 @@ class Blockchain:
         return sha256_hash.hexdigest()
     
     def add_block(self, block):
-        
+        if block.type == "create":
+            validate_election(block.data)
+
+        elif block.type == "vote":
+            validate_votes(block.data, self)
+            
         block.prev_hash = self.hash_block(self.blocks[-1])
-        mined_hash = self.mine_block(block, 5)
+
+        mined_hash = self.mine_block(block, 3)
+        block.hash = mined_hash
         self.blocks.append(block)
         return mined_hash
 

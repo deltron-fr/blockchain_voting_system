@@ -9,6 +9,7 @@ class Block:
     def __init__(self, type):
         self.type = type
         self.prev_hash = "0" * 64
+        self.hash = "0" * 64
         self.data = {}
         self.nonce = 0
         self.timestamp = int(time.time())
