@@ -10,7 +10,6 @@ def validate_election(data):
     if data["start_time"] > data["end_time"]:
         raise Exception("Invalid Timeline")
     
-
     
     return True
     

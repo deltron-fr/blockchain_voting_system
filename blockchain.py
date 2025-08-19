@@ -1,6 +1,7 @@
 from block import Block, ActionType
 from datetime import date, datetime, time
 from validator import validate_election, validate_votes
+from users import verify_signature, generate_signature, verify_user_pk
 import copy
 import hashlib
 import json
@@ -24,10 +25,9 @@ class Blockchain:
                 3: "John"
             },
             [
-                "AAAAAA", "WW"
+                "e9d0113834e213bd0b72f79b07f2edfd3bc04e40490e5dd32c7a2fa207dff676", "2057ba096442f2c4df58fb10510c623dc758da6d937d05505676e5535e2ab9b7"
             ],
-
-            "my_key", "my_signature", datetime.combine(START_DATE, START_TIME), datetime.combine(END_DATE, END_TIME)
+            "eb7c7e1023dc482199695cf8e37aea68c7d0646b1c3cef82ff4f7a46482cf31f", generate_signature("genesis", "keys/example.pem" ), datetime.combine(START_DATE, START_TIME), datetime.combine(END_DATE, END_TIME)
         )
 
         self.blocks.append(block)
@@ -57,12 +57,13 @@ class Blockchain:
         return sha256_hash.hexdigest()
     
     def add_block(self, block):
-        if block.type == "create":
-            validate_election(block.data)
 
-        elif block.type == "vote":
-            validate_votes(block.data, self)
+        if block.type == "create":
+            validate_election(block.data["election_data"])
             
+        elif block.type == "vote":
+            validate_votes(block.data["vote"], self)
+
         block.prev_hash = self.hash_block(self.blocks[-1])
 
         mined_hash = self.mine_block(block, 3)
