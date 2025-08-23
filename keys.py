@@ -1,6 +1,10 @@
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
+from cryptography.exceptions import InvalidSignature
 import hashlib
+import json
+from utils import serialize_payload
 
 def generate_keys():
     private_key = Ed25519PrivateKey.generate()
@@ -22,3 +26,41 @@ def generate_keys():
 
     return hashed_pk, pem_public_key, pem_private_key
 
+def generate_key_files():
+    hashed_pk, pk, sk = generate_keys()
+    with open("keys/example2.pem", "wb") as f:
+        f.write(sk)
+
+    with open("keys/example_pub2.pem", "wb") as f:
+        f.write(pk)
+
+    with open("keys/hashed_pk2.txt", "w") as f:
+        f.write(hashed_pk)
+
+def generate_signature(payload, file):
+    with open(file, "rb") as f:
+        pem_private_key = f.read()
+
+    private_key = serialization.load_pem_private_key(
+        pem_private_key, password=None, backend=default_backend()
+    )
+
+    data = serialize_payload(payload)
+    signature = private_key.sign(data)
+
+    return signature.hex()
+
+def verify_signature(payload, pk_data, signature):
+
+    public_key = serialization.load_pem_public_key(
+        pk_data, backend=default_backend()
+    )
+
+    data = serialize_payload(payload)
+    try:
+        public_key.verify(bytes.fromhex(signature), data)
+        
+    except InvalidSignature:
+        return "error: This signature is invalid"
+
+    return True
