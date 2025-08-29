@@ -14,7 +14,7 @@ def main():
 
     first.create_vote(1, 1, "null", get_user_key_data("keys/example_pub.pem"))
     second.create_vote(1, 1, "null", get_user_key_data("keys/example_pub1.pem"))
-    third.create_vote(1, 1, "null", get_user_key_data("keys/exam4_pub.pem"))
+    third.create_vote(1, 3, "null", get_user_key_data("keys/exam4_pub.pem"))
     fourth.create_vote(1, 3, "null", get_user_key_data("keys/exam5_pub.pem"))
 
     first.data["signature"] = generate_signature(first.data["vote"], "keys/example.pem")
@@ -28,11 +28,19 @@ def main():
     bc.add_block(third)
     bc.add_block(fourth)
 
-    results = display_results(bc, 1)
-    print(f"Election Count:\n")
+    results, winner = display_results(bc, 1)
+    print(f"Election Result:\n")
     for name, count in results.items():
         print(f"{name}: {count}")
     print("\n")
+    if len(winner) > 1:
+        print("The Result was a tie:")
+        for name, count in winner.items():
+            print(f"Candidate - {name} had {count} votes")
+
+    else:
+        name = "".join(winner.keys())
+        print(f"Candidate - {name} won the election with {winner.get(name)} votes")
 
 if __name__ == "__main__":
     main()
