@@ -64,13 +64,11 @@ class Blockchain:
     def add_block(self, block):
         block.data["public_key"] = hash_pk(block.data["public_key"])
 
-
         if block.type == "create":
             validate_election(block.data)
             
         elif block.type == "vote":
             validate_votes(block.data, self)
-
 
         block.prev_hash = self.hash_block(self.blocks[-1])
 

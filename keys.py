@@ -3,7 +3,6 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 from cryptography.exceptions import InvalidSignature
 import hashlib
-import json
 from utils import serialize_payload
 
 def generate_keys():
