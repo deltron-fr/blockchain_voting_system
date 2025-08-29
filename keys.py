@@ -27,13 +27,13 @@ def generate_keys():
 
 def generate_key_files():
     hashed_pk, pk, sk = generate_keys()
-    with open("keys/example2.pem", "wb") as f:
+    with open("keys/exam5.pem", "wb") as f:
         f.write(sk)
 
-    with open("keys/example_pub2.pem", "wb") as f:
+    with open("keys/exam5_pub.pem", "wb") as f:
         f.write(pk)
 
-    with open("keys/hashed_pk2.txt", "w") as f:
+    with open("keys/hashed_pk5.txt", "w") as f:
         f.write(hashed_pk)
 
 def generate_signature(payload, file):
@@ -63,3 +63,4 @@ def verify_signature(payload, pk_data, signature):
         return "error: This signature is invalid"
 
     return True
+

@@ -3,7 +3,6 @@ from datetime import date, datetime, time
 from validator import validate_election, validate_votes, verify_sig
 from users import hash_pk, get_user_key_data
 from keys import generate_signature
-from utils import serialize_payload
 import copy
 import hashlib
 import json
@@ -14,8 +13,8 @@ class Blockchain:
         self.genesis_block()
 
     def genesis_block(self):
-        START_DATE = date(2025, 8, 23)
-        END_DATE = date(2025, 8, 25)
+        START_DATE = date(2025, 8, 24)
+        END_DATE = date(2025, 8, 30)
 
         START_TIME = time(9, 10, 0)
         END_TIME = time(11, 0, 0)
@@ -30,7 +29,8 @@ class Blockchain:
                 3: "John"
             },
             [
-                "e9d0113834e213bd0b72f79b07f2edfd3bc04e40490e5dd32c7a2fa207dff676", "2057ba096442f2c4df58fb10510c623dc758da6d937d05505676e5535e2ab9b7"
+                "e9d0113834e213bd0b72f79b07f2edfd3bc04e40490e5dd32c7a2fa207dff676", "2057ba096442f2c4df58fb10510c623dc758da6d937d05505676e5535e2ab9b7",
+                "1d036a0601b3692a08e25d121c77f428744dff20def739c08fa8c7dea95b81c0", "960461e3a805122036310be84ffb78b2a6b7d2bbcad93f3e4bac3f2069d48513"
             ],
             gen_pk, "null", datetime.combine(START_DATE, START_TIME), datetime.combine(END_DATE, END_TIME)
         )
