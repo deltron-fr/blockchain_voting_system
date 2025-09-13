@@ -11,7 +11,6 @@ def validate_election(data):
     if data["election_data"]["start_time"] > data["election_data"]["end_time"]:
         raise Exception("Invalid Timeline")
     
-    
     return True
     
 def get_election_block(data, blockchain):

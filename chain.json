@@ -1,0 +1,44 @@
+[
+    {
+        "type": "create",
+        "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "data": {
+            "election_data": {
+                "election_id": 1,
+                "candidates": {
+                    "1": "Matthew",
+                    "2": "Mark",
+                    "3": "John"
+                },
+                "user_keys": [
+                    "e9d0113834e213bd0b72f79b07f2edfd3bc04e40490e5dd32c7a2fa207dff676",
+                    "2057ba096442f2c4df58fb10510c623dc758da6d937d05505676e5535e2ab9b7",
+                    "1d036a0601b3692a08e25d121c77f428744dff20def739c08fa8c7dea95b81c0",
+                    "960461e3a805122036310be84ffb78b2a6b7d2bbcad93f3e4bac3f2069d48513"
+                ],
+                "start_time": "2025-09-13T01:10:00",
+                "end_time": "2025-09-20T19:00:00"
+            },
+            "public_key": "eb7c7e1023dc482199695cf8e37aea68c7d0646b1c3cef82ff4f7a46482cf31f",
+            "signature": "4d68c33b47dc2faf45ef1e176ab57b3d7693339f1c009b17f7e061aaaa4372ab98ceb4874a427832c6b3df62403ed04adc14934d9cb9dcd82dcc5406c35e4c04"
+        },
+        "nonce": 0,
+        "timestamp": 1757763903,
+        "hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+        "type": "vote",
+        "prev_hash": "21224fc02dcd5f01a72f84ebc796951e629a2736d0e60360f9e1b5aa192aa4c7",
+        "data": {
+            "vote": {
+                "election_id": 1,
+                "candidate_id": 1
+            },
+            "signature": "463dfb7903819cab2e2828436f8f1e9deb89a0ff9f3bad15e2de3382595a825af218d0bf916442300eb7f90d9279c9f36a2ef8cea9ec8816f9cc910d80841804",
+            "public_key": "1d036a0601b3692a08e25d121c77f428744dff20def739c08fa8c7dea95b81c0"
+        },
+        "nonce": 10967,
+        "timestamp": 1757763903,
+        "hash": "0004927a0f5615a15efa7d054e400ec656d14e74525887455c9b2e4672efd4ac"
+    }
+]

@@ -3,21 +3,27 @@ from datetime import date, datetime, time
 from validator import validate_election, validate_votes, verify_sig
 from users import hash_pk, get_user_key_data
 from keys import generate_signature
+from utils import load_chain
 import copy
 import hashlib
 import json
 
 class Blockchain:
     def __init__(self):
-        self.blocks = []
-        self.genesis_block()
+        chain_data = load_chain("chain.json")
+
+        if not chain_data:
+            self.blocks = []
+            self.genesis_block()
+        else:
+            self.blocks = [Block.from_dict(d) for d in chain_data]
 
     def genesis_block(self):
-        START_DATE = date(2025, 8, 24)
-        END_DATE = date(2025, 8, 30)
+        START_DATE = date(2025, 9, 13)
+        END_DATE = date(2025, 9, 20)
 
-        START_TIME = time(9, 10, 0)
-        END_TIME = time(11, 0, 0)
+        START_TIME = time(1, 10, 0)
+        END_TIME = time(19, 0, 0)
         block = Block(ActionType.CREATE.value)
         pk = get_user_key_data("keys/example_pub2.pem")
         gen_pk = hash_pk(get_user_key_data("keys/example_pub2.pem"))
@@ -35,6 +41,7 @@ class Blockchain:
             gen_pk, "null", datetime.combine(START_DATE, START_TIME), datetime.combine(END_DATE, END_TIME)
         )
         block.data["signature"] = generate_signature(block.data["election_data"], "keys/example2.pem")
+        block.data["election_data"]
         if verify_sig(block, pk):
             self.blocks.append(block)
 
@@ -75,6 +82,7 @@ class Blockchain:
         mined_hash = self.mine_block(block, 3)
         block.hash = mined_hash
         self.blocks.append(block)
+        self.save_chain()
         return mined_hash
 
     def mine_block(self, block, difficulty):
@@ -85,7 +93,10 @@ class Blockchain:
             block_hash = self.hash_block(block)
 
         return block_hash
-
     
-    
+    def save_chain(self):
+        with open("chain.json", mode="w", encoding="utf-8") as f:
+            chain = [block.to_dict() for block in self.blocks]
+            json.dump(chain, f, indent=4)
 
+        

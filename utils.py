@@ -1,9 +1,8 @@
 import json
 from copy import deepcopy
-
+from datetime import datetime
 
 def serialize_payload(payload):
-
     payload_copy = deepcopy(payload)
 
     if "start_time" in payload_copy:
@@ -70,5 +69,13 @@ def display_results(blockchain, election_id):
 
     return results_dict, winner
 
-    
+
+def load_chain(file):
+    try:
+        with open(file, mode="r", encoding="utf-8") as f:
+            chain_data = json.load(f)
+
+        return chain_data
+    except Exception:
+        return False
     
