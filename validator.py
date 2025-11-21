@@ -47,19 +47,17 @@ def validate_votes(data, blockchain):
 def verify_sig(block, pk):
     if block.type == "create":
         payload = block.data["election_data"]
-        pk_data = pk
         signature = block.data["signature"]
 
-        if verify_signature(payload, pk_data, signature) != True:
-            raise Exception("Invalid Signature")
+        if verify_signature(payload, pk, signature) != True:
+            return False
         
         return True
     else:
         payload = block.data["vote"]
-        pk_data = pk
         signature = block.data["signature"]
 
-        if verify_signature(payload, pk_data, signature) != True:
-            raise Exception("Invalid Signature")
+        if verify_signature(payload, pk, signature) != True:
+            return False
         
         return True

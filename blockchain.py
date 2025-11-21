@@ -42,8 +42,10 @@ class Blockchain:
         )
         
         block.data["signature"] = generate_signature(block.data["election_data"], "keys/example2.pem")
-        block.data["election_data"]
+        
         if verify_sig(block, pk):
+            mined_hash = self.mine_block(block, 3)
+            block.hash = mined_hash
             self.blocks.append(block)
 
     def hash_block(self, block):
@@ -70,6 +72,9 @@ class Blockchain:
     
 
     def add_block(self, block):
+        if not verify_sig(block, block.data["public_key"]):
+            raise Exception("Invalid Signature")
+        
         block.data["public_key"] = hash_pk(block.data["public_key"])
 
         if block.type == "create":
@@ -80,6 +85,8 @@ class Blockchain:
 
         block.prev_hash = self.hash_block(self.blocks[-1])
 
+        if block.prev_hash != self.blocks[-1].hash:
+            raise Exception("Previous Hash not the same as hash of previous block. Invalid Chain")
 
         mined_hash = self.mine_block(block, 3)
         block.hash = mined_hash
