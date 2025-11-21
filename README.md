@@ -76,7 +76,7 @@ sha256sum keys/exam4_pub.pem | awk '{print $1}' >> user_keys_e2.txt
 3) Create an election via the CLI:
 
 ```bash
-# Format for datetimes: ISO (Z for UTC is accepted by the CLI helpers in this project)
+
 python3 cli.py create-election 2 candidates_e2.txt user_keys_e2.txt keys/example_pub.pem keys/example.pem 2025-01-01T00:00:00Z 2026-01-01T00:00:00Z
 ```
 
@@ -92,7 +92,7 @@ python3 cli.py vote 2 1 keys/exam4_pub.pem keys/exam4.pem
 
 ```bash
 python3 cli.py results 2
-# or inspect the chain
+# or to inspect the chain using jq
 jq . chain.json
 ```
 
@@ -118,10 +118,7 @@ python3 -c "from keys import generate_key_files; generate_key_files()"
 
 ## Displaying results
 
-This project provides two ways to inspect voting results:
-
 - CLI output: the `cli.py results <election_id>` command reads the chain and prints a human-friendly tally for the given election. This is the simplest way to check vote counts locally.
-- On-disk chain: all blocks (including `create` and `vote` blocks) are stored in `chain.json`. You can inspect the raw chain with tools such as `jq` to see each block's contents and signatures.
 
 How results are produced
 
@@ -133,20 +130,18 @@ Quick commands
 # Print a readable tally for election ID 2
 python3 cli.py results 2
 
-# Inspect the raw chain
-jq . chain.json
 ```
 
-## Future extensions (detailed)
+## Future extensions
 
 
 - Decentralization with local nodes (leader mechanism)
 
-	- run multiple local node processes that each maintain a copy of the ledger (`chain.json` or a local DB). A leader (proposer) is responsible for collecting pending transactions (create/vote payloads), assembling them into a block, and proposing the block to the other nodes.
+	- run multiple local node processes that each maintain a copy of the ledger (`chain.json`). A leader (proposer) is responsible for collecting pending create/vote payloads, assembling them into a block, and proposing the block to the other nodes.
 
 	- Simple leader-based protocol:
-		1. Leader collects transactions and builds a candidate block (including miner nonce if PoW is kept).
-		2. Leader broadcasts the proposed block to all peers over a simple RPC (HTTP/gRPC) endpoint.
+		1. Leader collects transaction(block).
+		2. Leader broadcasts the proposed block to all peers over a simple HTTP endpoint.
 		3. Peers validate the block (signatures, vote validity, prev_hash consistency). If valid, they reply with a signed ACK.
 		4. If the leader collects a quorum (majority) of ACKs within a timeout, it broadcasts a commit message and appends the block locally. Peers append on commit receipt.
 
