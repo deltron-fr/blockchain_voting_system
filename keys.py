@@ -5,6 +5,7 @@ from cryptography.exceptions import InvalidSignature
 import hashlib
 from utils import serialize_payload
 
+# Generates a new Ed25519 key pair and returns the hashed public key, public key, and private key
 def generate_keys():
     private_key = Ed25519PrivateKey.generate()
 
@@ -25,6 +26,7 @@ def generate_keys():
 
     return hashed_pk, pem_public_key, pem_private_key
 
+
 def generate_key_files():
     hashed_pk, pk, sk = generate_keys()
     with open("keys/exam5.pem", "wb") as f:
@@ -36,6 +38,7 @@ def generate_key_files():
     with open("keys/hashed_pk5.txt", "w") as f:
         f.write(hashed_pk)
 
+# Generates a signature for the given payload using the private key from the specified file
 def generate_signature(payload, file):
     with open(file, "rb") as f:
         pem_private_key = f.read()
@@ -60,7 +63,7 @@ def verify_signature(payload, pk_data, signature):
         public_key.verify(bytes.fromhex(signature), data)
         
     except InvalidSignature:
-        return "error: This signature is invalid"
+        return False
 
     return True
 

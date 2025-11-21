@@ -19,8 +19,8 @@ class Blockchain:
             self.blocks = [Block.from_dict(d) for d in chain_data]
 
     def genesis_block(self):
-        START_DATE = date(2025, 9, 13)
-        END_DATE = date(2025, 9, 20)
+        START_DATE = date(2025, 11, 13)
+        END_DATE = date(2025, 11, 25)
 
         START_TIME = time(1, 10, 0)
         END_TIME = time(19, 0, 0)
@@ -40,6 +40,7 @@ class Blockchain:
             ],
             gen_pk, "null", datetime.combine(START_DATE, START_TIME), datetime.combine(END_DATE, END_TIME)
         )
+        
         block.data["signature"] = generate_signature(block.data["election_data"], "keys/example2.pem")
         block.data["election_data"]
         if verify_sig(block, pk):
@@ -78,6 +79,7 @@ class Blockchain:
             validate_votes(block.data, self)
 
         block.prev_hash = self.hash_block(self.blocks[-1])
+
 
         mined_hash = self.mine_block(block, 3)
         block.hash = mined_hash

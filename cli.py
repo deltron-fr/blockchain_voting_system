@@ -3,8 +3,9 @@ from block import Block, ActionType
 from blockchain import Blockchain
 from users import get_user_key_data
 from keys import generate_signature
-from utils import load_candidates, load_keys
+from utils import load_candidates, load_keys, display_results
 from datetime import datetime
+import json
 
 @click.group()
 def cli():
@@ -52,6 +53,32 @@ def vote(election_id, c_id, pk_file, sk_file):
     bc.add_block(block)
 
     click.secho("block added successfully", fg='green')
+
+@cli.command()
+@click.argument("election_id", type=int)
+def results(election_id):
+    with open("chain.json", mode="r", encoding="utf-8") as f:
+        chain_data = json.load(f)
+    chain = [Block.from_dict(block) for block in chain_data]
+
+    total_results, winner = display_results(chain, election_id)
+    print("==== Election Results ===")
+    for candidate_id, votes in total_results.items():
+        print(f"{candidate_id}: {votes} votes")
+    
+    if len(winner) == 0:
+        print("No votes were cast in this election.")
+        return
+    
+    elif len(winner) == 1:
+        print("The winner is:")
+        name, count = next(iter(winner.items()))
+        print(f"{name} with {count} votes")
+        return
+
+    print("It's a tie between:")
+    for candidate in winner:
+        print(f"{candidate} with {total_results[candidate]} votes")
 
 if __name__ == "__main__":
     bc = Blockchain()

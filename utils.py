@@ -2,6 +2,7 @@ import json
 from copy import deepcopy
 from datetime import datetime
 
+# Returns a bytes representation of the payload for hashing/signing
 def serialize_payload(payload):
     payload_copy = deepcopy(payload)
 
@@ -13,7 +14,7 @@ def serialize_payload(payload):
 
     return serialized_payload.encode("utf-8")
 
-
+# Returns a mapping of id:name for candidates from a file
 def load_candidates(file_path):
     candidates = {}
 
@@ -23,6 +24,7 @@ def load_candidates(file_path):
 
     return candidates
 
+# Returns a list of keys from a file
 def load_keys(file_path):
     keys = []
     with open(file_path, "r") as f:
@@ -31,10 +33,11 @@ def load_keys(file_path):
 
     return keys
 
+# Returns a tally of votes for a given election_id
 def tally_votes(blockchain, election_id):
     tally = {}
 
-    for block in blockchain.blocks:
+    for block in blockchain:
         if block.type == "vote" and block.data["vote"]["election_id"] == election_id:
             candidate_id = block.data["vote"]["candidate_id"]
             if candidate_id in tally:
@@ -44,13 +47,16 @@ def tally_votes(blockchain, election_id):
     
     return tally
 
+# Displays the results of an election given its election_id
 def display_results(blockchain, election_id):
-    for block in blockchain.blocks:
+    for block in blockchain:
         if block.type == "create" and block.data["election_data"]["election_id"] == election_id:
             election_block = block
 
             candidates = election_block.data["election_data"]["candidates"]
             break
+    if candidates is None:
+        raise Exception("Election not found")
     
     tally = tally_votes(blockchain, election_id)
 
@@ -60,6 +66,7 @@ def display_results(blockchain, election_id):
         if k in tally:
             results_dict[v] = tally[k]
 
+    # Current issue: all highest vote getters are shown as winners, even if they have less votes than others
     winner = {}
     max_no = float("-inf")
     for name, count in results_dict.items():
@@ -76,6 +83,9 @@ def load_chain(file):
             chain_data = json.load(f)
 
         return chain_data
-    except Exception:
-        return False
+    except FileNotFoundError:
+        with open(file, mode="w", encoding="utf-8") as f:
+            json.dump([], f)
+    
+
     

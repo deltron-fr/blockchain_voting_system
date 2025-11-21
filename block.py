@@ -27,7 +27,6 @@ class Block:
         self.data["public_key"] = public_key
         self.data["signature"] = signature
         
-
     def create_vote(self, election_id, candidate_id, signature, public_key):
         self.data["vote"] = {
             "election_id" : election_id,
@@ -52,7 +51,6 @@ class Block:
             "hash": self.hash
         }
 
-
     @classmethod
     def from_dict(cls, data):
         block_type = data["type"]
@@ -62,8 +60,8 @@ class Block:
             block_data["election_data"]["start_time"] = datetime.fromisoformat(block_data["election_data"]["start_time"])
             block_data["election_data"]["end_time"] = datetime.fromisoformat(block_data["election_data"]["end_time"])
 
-            for k, _ in block_data["election_data"]["candidates"].items():
-                k = int(k)
+            new_dict = {int(k): v for k, v in block_data["election_data"]["candidates"].items()}
+            block_data["election_data"]["candidates"] = new_dict
 
         return cls(
             type=block_type,
