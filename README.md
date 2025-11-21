@@ -1,8 +1,8 @@
 ![status](https://img.shields.io/badge/status-in%20progress-yellow)
 
-# Blockchain Voting System (Prototype)
+# Blockchain Voting System
 
-Lightweight prototype of a blockchain-backed voting system. This repository contains a minimal blockchain representation, an on-disk chain (`chain.json`), key handling utilities, vote/election validators, and a CLI for creating elections and casting votes. The project is work-in-progress and intended as an educational prototype rather than production-ready software.
+Lightweight prototype of a blockchain-backed voting system. This repository contains a minimal blockchain representation, an on-disk chain (`chain.json`), key handling utilities, vote/election validators, and a CLI for creating elections and casting votes.
 
 ## Quick summary
 
